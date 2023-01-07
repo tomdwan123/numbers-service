@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_assignment_numberid ON assignment USING btree (numberid)

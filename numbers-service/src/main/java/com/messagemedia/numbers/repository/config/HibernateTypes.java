@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) Message4U Pty Ltd 2014-2018
+ *
+ * Except as otherwise permitted by the Copyright Act 1967 (Cth) (as amended from time to time) and/or any other
+ * applicable copyright legislation, the material may not be reproduced in any format and in any way whatsoever
+ * without the prior written consent of the copyright owner.
+ */
+
+package com.messagemedia.numbers.repository.config;
+
+public interface HibernateTypes {
+
+    String ENUM_TYPE = "pg-enum";
+    String ENUM_ARRAY_TYPE = "pg-enum-array";
+    String UUID_TYPE = "pg-uuid";
+    String HSTORE_TYPE = "hstore";
+}

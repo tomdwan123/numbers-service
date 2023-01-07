@@ -1,0 +1,13 @@
+{
+  "id": 1,
+  "customerId": "vendorId:accountId",
+  "name": "Route 1",
+  "steps": [
+    {
+      "routingType": "direct",
+      "directDetails": {
+        "number": "+61491570159"
+      }
+    }
+  ]
+}

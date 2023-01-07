@@ -1,0 +1,817 @@
+swagger: '2.0'
+info:
+  description: Api Documentation
+  version: '1.0'
+  title: 'Numbers Service Internal API Spec'
+  termsOfService: 'urn:tos'
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+host: 'localhost:10153'
+basePath: /
+tags:
+  - name: audit-controller
+    description: Audit Controller
+  - name: numbers-controller
+    description: Numbers Controller
+paths:
+  /v1/auditing/assignments:
+    get:
+      tags:
+        - audit-controller
+      summary: getAuditingAssignments
+      operationId: getAuditingAssignmentsUsingGET
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: createdAfter
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: createdBefore
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: deletedAfter
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: deletedBefore
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: id
+          in: query
+          required: false
+          type: string
+          format: uuid
+        - name: numberId
+          in: query
+          required: false
+          type: string
+          format: uuid
+        - name: pageSize
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: token.revNumber
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: token.tokenId
+          in: query
+          required: false
+          type: string
+          format: uuid
+        - name: vendorAccountId.accountId.accountId
+          in: query
+          required: false
+          type: string
+        - name: vendorAccountId.vendorId.vendorId
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AssignmentAuditListResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  /v1/numbers:
+    get:
+      tags:
+        - numbers-controller
+      summary: getNumbers
+      operationId: getNumbersUsingGET
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: assigned
+          in: query
+          required: false
+          type: boolean
+        - name: classification
+          in: query
+          required: false
+          type: string
+          enum:
+            - BRONZE
+            - SILVER
+            - GOLD
+        - name: country
+          in: query
+          required: false
+          type: string
+        - name: matching
+          in: query
+          required: false
+          type: string
+        - name: pageSize
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: serviceTypes
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+            enum:
+              - SMS
+              - TTS
+              - MMS
+              - CALL
+          collectionFormat: multi
+        - name: token
+          in: query
+          required: false
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/NumberListResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - numbers-controller
+      summary: registerNumber
+      operationId: registerNumberUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - in: body
+          name: numberRequest
+          description: numberRequest
+          required: true
+          schema:
+            $ref: '#/definitions/RegisterNumberRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/NumberDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/v1/numbers/{id}':
+    get:
+      tags:
+        - numbers-controller
+      summary: getNumber
+      operationId: getNumberUsingGET
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/NumberDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    delete:
+      tags:
+        - numbers-controller
+      summary: deleteNumber
+      operationId: deleteNumberUsingDELETE
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+    patch:
+      tags:
+        - numbers-controller
+      summary: updateNumber
+      operationId: updateNumberUsingPATCH
+      consumes:
+        - application/json
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: numberRequest
+          description: numberRequest
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateNumberRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/NumberDto'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+  '/v1/numbers/{id}/assignment':
+    get:
+      tags:
+        - numbers-controller
+      summary: loadAssignmentDetails
+      operationId: loadAssignmentDetailsUsingGET
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AssignmentDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - numbers-controller
+      summary: assignNumber
+      operationId: assignNumberUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - in: body
+          name: assignNumberRequest
+          description: assignNumberRequest
+          required: true
+          schema:
+            $ref: '#/definitions/AssignNumberRequest'
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/AssignmentDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+      tags:
+        - numbers-controller
+      summary: reassignNumber
+      operationId: reassignNumberUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - in: body
+          name: assignNumberRequest
+          description: assignNumberRequest
+          required: true
+          schema:
+            $ref: '#/definitions/AssignNumberRequest'
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AssignmentDto'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    delete:
+      tags:
+        - numbers-controller
+      summary: disassociateAssignment
+      operationId: disassociateAssignmentUsingDELETE
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+    patch:
+      tags:
+        - numbers-controller
+      summary: updateAssignment
+      operationId: updateAssignmentUsingPATCH
+      consumes:
+        - application/json
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - in: body
+          name: assignmentRequest
+          description: assignmentRequest
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateAssignmentRequest'
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AssignmentDto'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+  '/v1/numbers/{id}/forward':
+    get:
+      tags:
+        - numbers-controller
+      summary: getNumberForwardProfile
+      operationId: loadNumberForwardProfileUsingGET
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/NumberForwardDestination'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    delete:
+      tags:
+        - numbers-controller
+      summary: deleteNumberForwardProfile
+      operationId: removeNumberForwardProfileUsingDELETE
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: OK
+          schema:
+            $ref: '#/definitions/NumberForwardDestination'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      deprecated: false
+  /v1/numbers/assignments:
+    get:
+      tags:
+        - numbers-controller
+      summary: getNumberAssignments
+      operationId: getNumberAssignmentsUsingGET
+      produces:
+        - application/json;charset=UTF-8
+      parameters:
+        - name: accountId
+          in: query
+          required: true
+          type: string
+          description: account's nextGen ID
+        - name: vendorId
+          in: query
+          required: true
+          type: string
+        - name: country
+          in: query
+          required: false
+          type: string
+        - name: matching
+          in: query
+          required: false
+          type: string
+          description: find by number
+        - name: pageSize
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: serviceTypes
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+            enum:
+              - SMS
+              - TTS
+              - MMS
+              - CALL
+          collectionFormat: multi
+        - name: token
+          in: query
+          required: false
+          type: string
+          format: uuid
+        - name: exactServiceTypes
+          in: query
+          required: false
+          type: boolean
+        - name: classification
+          in: query
+          required: false
+          type: string
+          enum:
+            - BRONZE
+            - SILVER
+            - GOLD
+        - name: status
+          in: query
+          required: false
+          type: string
+          enum:
+            - UNVERIFIED
+            - PENDING
+            - ASSIGNED
+        - name: label
+          in: query
+          required: false
+          type: string
+          description: filter by name of the number
+        - name: accounts
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          description: filter by account ids
+        - name: matchings
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          description: filter by numbers
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/NumberListResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+definitions:
+  AssignNumberRequest:
+    type: object
+    properties:
+      vendorId:
+        type: string
+      accountId:
+        type: string
+      callbackUrl:
+        type: string
+      metadata:
+        type: object
+        additionalProperties:
+          type: string
+    title: AssignNumberRequest
+  AssignmentAuditListResponse:
+    type: object
+    properties:
+      assignments:
+        type: array
+        items:
+          $ref: '#/definitions/AssignmentDto'
+      pageMetadata:
+        $ref: '#/definitions/AuditPageMetadata'
+    title: AssignmentAuditListResponse
+  AssignmentDto:
+    type: object
+    properties:
+      accountId:
+        type: string
+      callbackUrl:
+        type: string
+      created:
+        type: string
+        format: date-time
+      deleted:
+        type: string
+        format: date-time
+      id:
+        type: string
+        format: uuid
+      metadata:
+        type: object
+        additionalProperties:
+          type: string
+      numberId:
+        type: string
+        format: uuid
+      vendorId:
+        type: string
+    title: AssignmentDto
+  AuditPageMetadata:
+    type: object
+    properties:
+      pageSize:
+        type: integer
+        format: int32
+      token:
+        $ref: '#/definitions/AuditToken'
+    title: AuditPageMetadata
+  AuditToken:
+    type: object
+    properties:
+      revNumber:
+        type: integer
+        format: int32
+      tokenId:
+        type: string
+        format: uuid
+    title: AuditToken
+  'Map«string,string»':
+    type: object
+    title: 'Map«string,string»'
+    additionalProperties:
+      type: string
+  NumberDto:
+    type: object
+    properties:
+      assignedTo:
+        $ref: '#/definitions/AssignmentDto'
+      availableAfter:
+        type: string
+        format: date-time
+      capabilities:
+        type: array
+        items:
+          type: string
+          enum:
+            - SMS
+            - TTS
+            - MMS
+            - CALL
+      classification:
+        type: string
+        enum:
+          - BRONZE
+          - SILVER
+          - GOLD
+      country:
+        type: string
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+        format: uuid
+      phoneNumber:
+        type: string
+      providerId:
+        type: string
+        format: uuid
+      type:
+        type: string
+        enum:
+          - MOBILE
+          - LANDLINE
+          - TOLL_FREE
+          - SHORT_CODE
+      status:
+        type: string
+        enum:
+          - UNVERIFIED
+          - PENDING
+          - ASSIGNED
+      updated:
+        type: string
+        format: date-time
+    title: NumberDto
+  NumberListResponse:
+    type: object
+    properties:
+      numbers:
+        type: array
+        items:
+          $ref: '#/definitions/NumberDto'
+      pageMetadata:
+        $ref: '#/definitions/PageMetadata'
+    title: NumberListResponse
+  PageMetadata:
+    type: object
+    properties:
+      pageSize:
+        type: integer
+        format: int32
+      token:
+        type: string
+        format: uuid
+    title: PageMetadata
+  RegisterNumberRequest:
+    type: object
+    properties:
+      phoneNumber:
+        type: string
+      providerId:
+        type: string
+        format: uuid
+      country:
+        type: string
+      type:
+        type: string
+        enum:
+          - MOBILE
+          - LANDLINE
+          - TOLL_FREE
+          - SHORT_CODE
+      classification:
+        type: string
+        enum:
+          - BRONZE
+          - SILVER
+          - GOLD
+      capabilities:
+        type: array
+        items:
+          type: string
+          enum:
+            - SMS
+            - TTS
+            - MMS
+            - CALL
+    title: RegisterNumberRequest
+  UpdateAssignmentRequest:
+    type: object
+    properties:
+      callbackUrl:
+        $ref: '#/definitions/ValueWithNull«string»'
+      metadata:
+        $ref: '#/definitions/ValueWithNull«Map«string,string»»'
+    title: UpdateAssignmentRequest
+  UpdateNumberRequest:
+    type: object
+    properties:
+      classification:
+        type: string
+        enum:
+          - BRONZE
+          - SILVER
+          - GOLD
+      capabilities:
+        type: array
+        items:
+          type: string
+          enum:
+            - SMS
+            - TTS
+            - MMS
+            - CALL
+      availableAfter:
+        $ref: '#/definitions/ValueWithNull«OffsetDateTime»'
+      status:
+        type: string
+        enum:
+          - UNVERIFIED
+          - PENDING
+          - ASSIGNED
+      providerId:
+        type: string
+        format: uuid
+    title: UpdateNumberRequest
+  'ValueWithNull«Map«string,string»»':
+    type: object
+    properties:
+      explicitNull:
+        type: boolean
+    title: 'ValueWithNull«Map«string,string»»'
+  ValueWithNull«OffsetDateTime»:
+    type: object
+    properties:
+      explicitNull:
+        type: boolean
+    title: ValueWithNull«OffsetDateTime»
+  ValueWithNull«string»:
+    type: object
+    properties:
+      explicitNull:
+        type: boolean
+    title: ValueWithNull«string»
+  NumberForwardDestination:
+    type: object
+    properties:
+      destination:
+        type: string
+    title: NumberForwardDestination

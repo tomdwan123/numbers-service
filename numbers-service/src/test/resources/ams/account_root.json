@@ -1,0 +1,24 @@
+{
+  "id": "ef7b84b0-2065-47bb-9d46-c5936e20d7b7",
+  "vendorAccountId": {
+    "vendorId": "MessageMedia",
+    "accountId": "MessageMedia"
+  },
+  "parentAccount": null,
+  "operatingCountry": "AU",
+  "delegatedCompliance": false,
+  "defaultTrafficClass": "VERY_HIGH",
+  "status": "ACTIVE",
+  "type": "INTERNAL",
+  "billingType": "POSTPAID",
+  "timezone": "Australia/Melbourne",
+  "deliveryProperties": [],
+  "inboundKeywords": [],
+  "providerWeights": [],
+  "relatedAccounts": {},
+  "prioritisation": {},
+  "httpNotifications": [],
+  "usageTrackingThresholds": [],
+  "accessControl": [],
+  "defaultMessageFlags": []
+}

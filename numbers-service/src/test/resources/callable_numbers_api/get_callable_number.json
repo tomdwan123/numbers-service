@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "name": "AU to Adrian",
+  "number": "+61491570156",
+  "routingProfile": {
+    "id": 1,
+    "name": "Adrian Number",
+    "steps": [
+      {
+        "routingType": "direct",
+        "directDetails": {
+          "number": "+84977000000"
+        }
+      }
+    ]
+  }
+}

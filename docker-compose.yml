@@ -1,0 +1,15 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:9.6.6
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+  sqs:
+    image: behance/elasticmq-docker
+    ports:
+      - "9324:9324"
+    environment:
+      - LC_ALL=C.UTF-8
+    entrypoint: /elasticmq/run
